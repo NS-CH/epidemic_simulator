@@ -50,12 +50,6 @@ class EpidemicSimulator {
         simulation is terminated)
         startingInfPop (amount of people on first iteration who are already infected.)
         personIntAmount (amount of people a person will interact with.)
-
-        Termination:
-        In this simulation, we assume that recovered people cannot become infected again. Therefore if all people
-        in the simulation enter the recovered state, there cannot be any more changes to the simulation so the 
-        simulation will terminated early. Also because people who are dead cannot come back from the dead, if all
-        people die, there cannot be any more changes to the simulation, so the simulation will be terminated early.
         */
         EpidemicSimulator(int populationSize, double infRate, double recRate, double deathChance, int simDuration, int startingInfPop, int personIntAmount)
         : infectionRate(infRate), recoveryRate(recRate), deathRate(deathChance), duration(simDuration), startingInfectedPopulation(startingInfPop), personInteractionAmount(personIntAmount), populationSize(populationSize)
@@ -65,17 +59,18 @@ class EpidemicSimulator {
             {
                 // Pushes a Person Object to the vector for population size.
                 population.push_back(Person());
+            }
 
-                for (int i = 0; i < startingInfPop; i++)
+            // Randomly selects a group of people to be infected by default.
+            for (int i = 0; i < startingInfPop; i++)
+            {
+                while (true)
                 {
-                    while (true)
+                    int randomSelectedPerson = rand() % populationSize;
+                    if (population[randomSelectedPerson].state != Infected)
                     {
-                        int randomSelectedPerson = rand() % populationSize;
-                        if (population[randomSelectedPerson].state != Infected)
-                        {
-                            population[randomSelectedPerson].state = Infected;
-                            break;
-                        }
+                        population[randomSelectedPerson].state = Infected;
+                        break;
                     }
                 }
             }
@@ -176,11 +171,12 @@ class EpidemicSimulator {
                 }
             }
 
-            cout << "Day " << day << "Report: " << '\n';
+            cout << "Day " << day << " Report: " << '\n';
             cout << "Susceptible Count: " << susceptibleCount << '\n';
             cout << "Infected Count: " << infectedCount << '\n';
             cout << "Recovered Count: " << recoveredCount << '\n';
-            cout << "Deceased Count: " << deceasedCount << '\n\n\n';
+            cout << "Deceased Count: " << deceasedCount << '\n';
+            cout << " " << endl;
         }
 };
 
@@ -215,9 +211,14 @@ int main()
     cin >> userSelectedStartingInfectionAmount;
 
     cout << "What would you like the sim duration to be? (the amount of iterations the simulation will go through): ";
-    cin >> userSelectedInfectionRate;
+    cin >> userSelectedSimDuration;
 
     EpidemicSimulator simulator(userSelectedPopulationSize, userSelectedInfectionRate, userSelectedRecoveryRate, userSelectedDeathRate, userSelectedSimDuration, userSelectedStartingInfectionAmount, userSelectedPersonInteractionAmount);
     simulator.simulate();
+
+    cout << "************************" << '\n';
+    cout << "Press any Key to exit.";
+    cin.ignore();
+    cin.get();
     return 0;
 }
