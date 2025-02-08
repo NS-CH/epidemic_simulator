@@ -92,13 +92,13 @@ class EpidemicSimulator {
                         // Adds to the amount of days they have been infected
                         person.daysInfected++;
                         // Rolls random chance to decide if they will recover or not
-                        if ((double)rand() / RAND_MAX <= recoveryRate)
+                        if ((double)rand() / RAND_MAX < recoveryRate)
                         {
                             // Sets state to recovered
                            person.state = Recovered; 
                         }
                         // Rolls random chance to decide if they will die or not
-                        else if ((double)rand() / RAND_MAX <= deathRate)
+                        else if ((double)rand() / RAND_MAX < deathRate)
                         {
                             // Sets state to Deceased
                             person.state = Deceased;
